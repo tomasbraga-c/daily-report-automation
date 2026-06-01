@@ -57,3 +57,16 @@ def fetch_preferences(email):
     except requests.RequestException as e:
         print(f"Erro ao buscar preferências: {e}")
         return None
+    
+#######################################################
+
+def fetch_all_recipients():
+    try:
+        response = requests.get(f"{API_URL}/preferences", timeout=10)
+        if response.status_code == 200:
+            return response.json()
+        print(f"Erro ao buscar destinatários: {response.status_code}")
+        return []
+    except requests.RequestException as e:
+        print(f"Erro ao buscar destinatários: {e}")
+        return []

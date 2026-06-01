@@ -11,22 +11,19 @@ API_URL = os.getenv("CURRENCY_API_URL", "https://currency-dashboard-api.onrender
 
 
 def wake_up_server():
+    base_url = API_URL.replace("/api/v1", "")
     tentativas = 0
     while tentativas < MAX_TENTATIVAS:
         try:
-            response = requests.get(f"{API_URL}/summary", timeout=5)
+            response = requests.get(f"{base_url}/health", timeout=5)
             if response.status_code == 200:
                 print("Servidor acordado!")
                 time.sleep(3)
                 return True
-            elif response.status_code == 503:
-                print(f"Servidor acordando... Tentativa {tentativas + 1}/{MAX_TENTATIVAS}")
-                tentativas += 1
-                time.sleep(WAIT_SECONDS)
         except requests.RequestException as e:
             print(f"Erro de conexão: {e}")
-            tentativas += 1
-            time.sleep(WAIT_SECONDS)
+        tentativas += 1
+        time.sleep(WAIT_SECONDS)
     print("Falha ao acordar o servidor.")
     return False
 

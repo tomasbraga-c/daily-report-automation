@@ -17,6 +17,7 @@ def wake_up_server():
             response = requests.get(f"{API_URL}/summary", timeout=5)
             if response.status_code == 200:
                 print("Servidor acordado!")
+                time.sleep(3)
                 return True
             elif response.status_code == 503:
                 print(f"Servidor acordando... Tentativa {tentativas + 1}/{MAX_TENTATIVAS}")
@@ -33,7 +34,9 @@ def wake_up_server():
 
 def fetch_summary():
     try:
-        response = requests.get(f"{API_URL}/summary", timeout=10)
+        response = requests.get(f"{API_URL}/summary", timeout=15)
+        print(f"Status do summary: {response.status_code}") 
+        print(f"Resposta: {response.text[:200]}")
         if response.status_code == 200:
             return response.json()
         print(f"Erro ao buscar resumo: {response.status_code}")

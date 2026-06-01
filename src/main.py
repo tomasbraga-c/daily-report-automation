@@ -8,10 +8,9 @@ load_dotenv()
 
 def main():
 
-    wake_up_server()
     if not wake_up_server():
         print("Servidor não respondeu. Encerrando.")
-    return
+        return
 
 #########################################
 
@@ -19,10 +18,11 @@ def main():
     if not summary:
         print("Não foi possível obter o resumo. Encerrando.")
         return 
-
+    print("Summary obtido!")
 #########################################
 
     recipients = os.getenv("EMAIL_RECIPIENTS", "").split(",")
+    print(f"Destinatários: {recipients}")
     if not recipients:
         print("Nenhum destinatário configurado. Encerrando.")
         return
@@ -31,9 +31,11 @@ def main():
 
     for email in recipients:
         email = email.strip()
+        print(f"Processando: {email}")
         if not email:
             continue
         preferences = fetch_preferences(email)
+        print(f"Preferências: {preferences}")  
         if not preferences:
             print(f"Não foi possível obter preferências para {email}. Pulando.")
             continue

@@ -1,0 +1,30 @@
+name: Daily Currency Report
+
+on:
+  schedule:ls -la .github/workflows/
+    - cron: "0 11 * * 1-6"
+  workflow_dispatch:
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Configura Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Instala dependências
+        run: pip install -r requirements.txt
+
+      - name: Roda o script de relatório
+        run: python src/main.py
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
+          CURRENCY_API_URL: ${{ secrets.CURRENCY_API_URL }}

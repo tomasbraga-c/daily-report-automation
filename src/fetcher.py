@@ -67,3 +67,15 @@ def fetch_all_recipients():
     except requests.RequestException as e:
         print(f"Erro ao buscar destinatários: {e}")
         return []
+    
+#######################################################
+
+def fetch_crypto(crypto_id):
+    try:
+        response = requests.get(f"{API_URL}/cryptos/{crypto_id}", timeout=10)
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except requests.RequestException as e:
+        print(f"Erro ao buscar crypto {crypto_id}: {e}")
+        return None

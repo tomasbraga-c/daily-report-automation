@@ -4,7 +4,7 @@ Automação que coleta dados de variação de moedas e criptomoedas do [Currency
 
 ## 🚀 Sobre o projeto
 
-Este projeto consome diretamente a API do [Currency.Dash](https://github.com/tomasbraga-c/currency-dashboard) — um dashboard fullstack de cotações em tempo real. Todo dia de manhã, de segunda a sábado, um script Python acorda o servidor, busca todos os usuários cadastrados nas preferências, e envia um e-mail HTML personalizado para cada um com as variações do dia.
+Este projeto consome diretamente a API do [Currency.Dash](https://github.com/tomasbraga-c/currency-dashboard) — um dashboard fullstack de cotações em tempo real. Todo dia de manhã, de segunda a sábado, um script Python acorda o servidor, busca todos os usuários ativos cadastrados, e envia um e-mail HTML personalizado para cada um com as variações do dia. Cada e-mail inclui um link de cancelamento de inscrição.
 
 ## 🛠️ Tecnologias
 
@@ -16,12 +16,14 @@ Este projeto consome diretamente a API do [Currency.Dash](https://github.com/tom
 ## ⚙️ Como funciona
 
 1. GitHub Actions aciona o script às 8h (horário de Brasília)
-2. Wake-up do servidor Render (plano gratuito hiberna após inatividade)
-3. Busca todos os usuários cadastrados via GET /api/v1/preferences
+2. Wake-up do servidor Render via endpoint /health (plano gratuito hiberna após inatividade)
+3. Busca todos os usuários ativos via GET /api/v1/preferences
 4. Coleta os dados do dia via GET /api/v1/summary
 5. Para cada usuário:
    - Filtra as moedas e criptos de sua preferência
-   - Formata e-mail HTML com as cores do Currency.Dash
+   - Busca individualmente as criptos que não vêm no resumo padrão (GET /api/v1/cryptos/{id})
+   - Formata e-mail HTML responsivo com a identidade visual do Currency.Dash
+   - Inclui link de cancelamento de inscrição no rodapé
    - Envia via SMTP do Gmail
 
 ## 🔧 Como rodar localmente
@@ -68,22 +70,26 @@ O script é executado automaticamente via GitHub Actions com o seguinte cron:
 
 Também é possível disparar manualmente pela aba **Actions** do repositório.
 
+## ✉️ Cancelamento de inscrição
+
+Cada e-mail enviado contém um link de cancelamento no rodapé. Ao clicar, o usuário é direcionado para o endpoint GET /api/v1/unsubscribe do Currency.Dash, que marca sua inscrição como inativa no banco de dados. A partir daí, ele deixa de receber os relatórios.
+
 ## 🔗 Projeto relacionado — Currency.Dash
 
 Este projeto é um consumidor da API do [Currency.Dash](https://github.com/tomasbraga-c/currency-dashboard). Os dois projetos se complementam:
 
 | Projeto | Responsabilidade |
 |---------|-----------------|
-| [Currency.Dash](https://currency-dashboard-beryl.vercel.app) | Coleta e expõe os dados em tempo real. Usuários se cadastram pelo botão "Relatório" no site |
+| [Currency.Dash](https://currency-dashboard-beryl.vercel.app) | Coleta e expõe os dados em tempo real. Usuários se cadastram pelo botão "Relatório" no site e suas preferências são salvas no banco (Supabase) |
 | Daily Report Automation | Consome a API e distribui os dados por e-mail todo dia às 8h |
 
 Para receber o relatório diário, basta acessar o [Currency.Dash](https://currency-dashboard-beryl.vercel.app), clicar em **Relatório** e cadastrar seu e-mail com as moedas de preferência.
 
 ## 🔮 Melhorias futuras
 
-- **Persistência de dados** — migrar o `preferences.json` para um banco de dados (PostgreSQL ou MongoDB) para evitar perda de cadastros em redeploys do Render
-- **Suporte a mais criptomoedas** — incluir Ethereum e outras moedas no relatório
 - **Relatório em PDF** — gerar e anexar um PDF além do e-mail HTML
+- **Frequência personalizável** — permitir que o usuário escolha receber diário, semanal ou apenas em grandes variações
+- **Templates de e-mail** — separar o HTML em templates (Jinja2) para facilitar manutenção
 
 ## 👨‍💻 Autor
 

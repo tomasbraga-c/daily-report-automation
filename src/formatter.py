@@ -4,12 +4,16 @@ def format_email(summary, preferences):
 
     cards_html = ""
     for par in preferences['currencies']:
-        if len(par) == 3:
-            chave = par + "BRL"  
-        else:
-            chave = par          
+        
+        limpo = par.replace("-", "")
 
-        codigo = par[:3]  
+       
+        if len(limpo) == 3:
+            chave = limpo + "BRL"  
+        else:
+            chave = limpo          
+
+        codigo = limpo[:3]  
 
         if chave in summary['currencies']:
             dados = summary['currencies'][chave]

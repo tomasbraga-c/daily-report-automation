@@ -125,7 +125,8 @@ def format_email(summary, preferences):
                 <td style="background:#ffffff; border-radius:0 0 16px 16px; padding:18px 32px; text-align:center;">
                   <p style="font-size:11px; color:{CINZA_TEXTO}; margin:0; line-height:1.6;">
                     Dados de câmbio comercial fornecidos por AwesomeAPI e CoinGecko.<br>
-                    © Currency.Dash · Você recebe este e-mail por ter se inscrito no dashboard.
+                    © Currency.Dash · Você recebe este e-mail por ter se inscrito no dashboard.<br>
+                    <a href="https://currency-dashboard-api.onrender.com/api/v1/unsubscribe?email={preferences['email']}" style="color:{CINZA_TEXTO}; text-decoration:underline;">Cancelar inscrição</a>
                   </p>
                 </td>
               </tr>
